@@ -1,6 +1,6 @@
 from .base_page import BasePage
 from .locators import LoginPageLocators
-
+import time
 
 class LoginPage(BasePage):
     def should_be_login_page(self):
@@ -9,13 +9,22 @@ class LoginPage(BasePage):
         self.should_be_register_form()
 
     def should_be_login_url(self):
-        # реализуйте проверку, что есть ссылка логина
-        assert "login" in self.browser.current_url, "Слово 'login' отсутствует в текущем URL"
+        assert "login" in self.browser.current_url, "URL does not contain 'login'"
 
     def should_be_login_form(self):
-        # реализуйте проверку, что есть форма логина
-        assert self.is_element_present(*LoginPageLocators.LOGIN_FORM), "Форма логина отсутствует"
+        assert self.is_element_present(*LoginPageLocators.LOGIN_FORM), "Login form is not presented"
 
     def should_be_register_form(self):
-        # реализуйте проверку, что есть форма регистрации на странице
-        assert self.is_element_present(*LoginPageLocators.REGISTER_FORM), "Форма регистрации отсутствует"
+        assert self.is_element_present(*LoginPageLocators.REGISTER_FORM), "Register form is not presented"
+
+    def register_new_user(self, email, password):
+        email_field = self.browser.find_element(*LoginPageLocators.REGISTER_EMAIL)
+        password_field = self.browser.find_element(*LoginPageLocators.REGISTER_PASSWORD)
+        password_confirm_field = self.browser.find_element(*LoginPageLocators.REGISTER_PASSWORD_CONFIRM)
+        
+        email_field.send_keys(email)
+        password_field.send_keys(password)
+        password_confirm_field.send_keys(password)
+        
+        register_button = self.browser.find_element(*LoginPageLocators.REGISTER_BUTTON)
+        register_button.click()
